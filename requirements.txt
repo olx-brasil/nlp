@@ -1,6 +1,7 @@
 cssselect==0.9.1
 jdcal==1.0
 lxml==3.4.1
+nltk==3.2.1
 node==0.9.15
 odict==1.5.1
 openpyxl==2.1.1
