@@ -25,9 +25,8 @@ setup(name='nlp',
       license='MIT',
       install_requires=requirements(),
       packages=find_packages(exclude=['tests*']),
-      #package_data={'nlp': ['data/tagger.dat']},
-      #scripts=['script.py'],
-      data_files=[('', ['coisa.cfg'])], #('config', ['config/simple.cfg'])
+      scripts=['scripts/tagger_stdin.py'],
+      #data_files=[('config', ['config/simple.cfg'])],
       include_package_data=True,
       zip_safe=False,
       classifiers=[
