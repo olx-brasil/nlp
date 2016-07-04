@@ -17,6 +17,7 @@ def requirements():
 setup(name='nlp',
       version="1.0",
       description='Python library for natural language processing',
+      long_description=open('README').read(),
       keywords='python natural language tag',
       url='git@devscm.schibsted.com.br:machine-learning/nlp.git',
       author='OLX Inc.',
