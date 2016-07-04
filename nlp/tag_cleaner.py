@@ -76,10 +76,8 @@ class TagCleaner:
 
         return " ".join(body_filt)
 
-#############################################################################################
-
 if __name__ == '__main__':
-    f = open('tagger', 'r')
+    f = open('data/tagger', 'r')
     tagger = pickle.load(f)
     f.close()
 
