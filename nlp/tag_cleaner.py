@@ -45,11 +45,11 @@ class TagCleaner:
           x[idx] += (str(aux[idx]), )
       return x
 
-    def filterBodyDel(self, text):
-      return [t for t in text if t[2]=='0']
+    def filterBodyDel(self, tokens):
+      return [t for t in tokens if t[2]=='0']
 
-    def filterBodyMorf(self, text):
-      return [t[0] for t in text if t[1] in [None, 'N', 'V', 'PCP', 'ADJ']]
+    def filterBodyMorf(self, tokens):
+      return [t[0] for t in tokens if t[1] in [None, 'N', 'V', 'PCP', 'ADJ']]
 
     def countKeep(self, text):
       count = 0
