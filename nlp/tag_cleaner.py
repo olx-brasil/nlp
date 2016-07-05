@@ -1,12 +1,11 @@
-#!/usr/local/bin/python2.7
 # -*- coding: utf-8 -*-
 
 import re
 import pickle
-import pkg_resources, os
+from nlp.resource import Resource
 
 class TagCleaner:
-    tagger = None
+    model = None
     split_regex = re.compile('\W+', re.U)
 
     def __init__(self):
@@ -14,16 +13,17 @@ class TagCleaner:
 
     def loadModel(self, modelName):
         resource_package = __name__
-        resource_path = os.path.join('data', "%s.dat" % modelName)
-        tagger_path = pkg_resources.resource_filename(resource_package, resource_path)
-        with open(tagger_path, 'r') as f:
-            self.tagger = pickle.load(f)
+        with open(Resource.getResourcePath('data', "%s.dat" % modelName), 'r') as f:
+            self.model = pickle.load(f)
+
+    def getModel(self):
+        return self.model
 
     def cleanNoWords(self, text):
         return re.sub(r'\w*\d+\w*', '', text)
 
     def tokenize(self, text):
-      return [t for t in re.split(self.split_regex, text.lower()) if len(t) > 1 or t in ['a','e','o'] ]
+      return [t for t in re.split(self.split_regex, text.lower()) if len(t) > 1 or t in ['a','e','o']]
 
     def getWindowList(self, x):
       aux = [0] * len(x)
@@ -70,7 +70,7 @@ class TagCleaner:
       return count
 
     def processTokens(self, tokens):
-        return self.getWindowList(self.tagger.tag(tokens))
+        return self.getWindowList(self.model.tag(tokens))
 
     def filterTokens(self, tuples):
         return self.filterBodyMorf(self.filterBodyDel(tuples))
