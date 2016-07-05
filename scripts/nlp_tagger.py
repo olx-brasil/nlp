@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from nlp.tag_cleaner import TagCleaner
-import pkg_resources
-import os, sys
-import pickle
 from optparse import OptionParser
+import pkg_resources
 import codecs
+import pickle
+import sys
+import os
 
 parser = OptionParser()
 parser.set_usage('Usage: nlp_tagger.py [FILE]')

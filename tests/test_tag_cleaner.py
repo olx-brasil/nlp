@@ -41,5 +41,22 @@ class TestTagCleaner(TestCase):
         entities = map(lambda token: token[-1], tokens)
         self.assertEqual(entities, [u'ART', u'N', u'V', u'ADJ'])
 
+    def testMarkWindowed(self):
+        sentence = u'o abacaxi está maduro e ainda tem laranja, mandioca, banana, carro, caminhão, loja e aipim'
+        words = re.split(r'\s+', sentence, re.U)
+        self.tc.loadModel(self.model)
+        tags_marked = self.tc.markWindowed(self.tc.tag(words))
+        flags = map(lambda x: x[-1], tags_marked)
+        self.assertEqual(flags, ['0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '1', '1', '1', '0', '0'])
+
+    def testFilterBodyDel(self):
+        marks = [('', '', '0'), ('', '', '1'), ('', '', '2'), ('', '', '3')]
+        self.assertEqual([('', '', '0')], self.tc.filterBodyDel(marks))
+
+    def testFilterBodyMorf(self):
+        marks = [('a', 'ADJ', ''), ('b', 'N', ''), ('x', 'XXX', ''), ('c', 'PCP', ''), ('d', 'V', '')]
+        self.assertEqual('abcd', ''.join(self.tc.filterBodyMorf(marks)))
+
+
 if __name__ == '__main__':
     unittest.main()

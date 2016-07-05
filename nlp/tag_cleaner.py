@@ -28,7 +28,7 @@ class TagCleaner:
     def tag(self, words):
       return self.model.tag(words)
 
-    def getWindowList(self, x):
+    def markWindowed(self, x):
       aux = [0] * len(x)
       for idx in range(0,len(x)-4):
         if (x[idx][1]==None or x[idx][1]=='N' or x[idx][1]=='N|EST') and \
@@ -45,47 +45,45 @@ class TagCleaner:
           x[idx] += (str(aux[idx]), )
       return x
 
-    def filterBodyDel(self, tokens):
-      return [t for t in tokens if t[2]=='0']
+    def filterBodyDel(self, marks):
+      return [t for t in marks if t[2]=='0']
 
-    def filterBodyMorf(self, tokens):
-      return [t[0] for t in tokens if t[1] in [None, 'N', 'V', 'PCP', 'ADJ']]
+    def filterBodyMorf(self, marks):
+      return [t[0] for t in marks if t[1] in [None, 'N', 'V', 'PCP', 'ADJ']]
 
-    def countKeep(self, text):
+    def countKeep(self, marks):
       count = 0
-      for i in text:
+      for i in marks:
         if i[2] == '0':
           count+=1
       return count
 
-    def countDel(self, text):
+    def countDel(self, marks):
       count = 0
-      for i in text:
+      for i in marks:
         if i[2] == '1':
           count+=1
       return count
 
-    def countN(self, text):
+    def countN(self, marks):
       count = 0
-      for i in text:
+      for i in marks:
         if i[1] == 'N':
           count+=1
       return count
 
-    def processWords(self, words):
-        return self.getWindowList(self.tag(words))
-
-    def filterTokens(self, tokens):
-        return self.filterBodyMorf(self.filterBodyDel(tokens))
+    def filterMarks(self, marks):
+        return self.filterBodyMorf(self.filterBodyDel(marks))
 
     def cleanBody(self, body):
-        body_clean = self.cleanNoWords(body)
-        body_token = self.tokenize(body_clean)
+        body_cleaned = self.cleanNoWords(body)
+        tokens = self.tokenize(body_cleaned)
 
-        body_tagg = self.processWords(body_token)
-        body_filt = self.filterTokens(body_tagg)
+        tags = self.tc.tag(tokens)
+        marks = self.markWindowed(tags)
+        tokens_cleaned = self.filterMarks(marks)
 
-        return " ".join(body_filt)
+        return " ".join(tokens_cleaned)
 
 def run():
     tag_cleaner = TagCleaner()
