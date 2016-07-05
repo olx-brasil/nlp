@@ -79,7 +79,7 @@ class TagCleaner:
         body_cleaned = self.cleanNoWords(body)
         tokens = self.tokenize(body_cleaned)
 
-        tags = self.tc.tag(tokens)
+        tags = self.tag(tokens)
         marks = self.markWindowed(tags)
         tokens_cleaned = self.filterMarks(marks)
 
