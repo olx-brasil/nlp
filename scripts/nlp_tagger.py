@@ -10,7 +10,7 @@ import codecs
 
 parser = OptionParser()
 parser.set_usage('Usage: nlp_tagger.py [FILE]')
-parser.add_option('-e', '--encoding', help='Set the input encoding (Default to utf-8)', dest='encoding', default='utf-8')
+parser.add_option('-e', '--encoding', help='Set the input encoding (Default to UTF-8)', dest='encoding', default='utf-8')
 parser.set_description(
 """
 FILE\tThe file with body content (If ommited use stdin instead)
@@ -24,13 +24,12 @@ if (len(args) > 0):
 else:
     file_input = sys.stdin
 
+with file_input as f:
+    body_raw = codecs.getreader(options.encoding)(f).read()
+
 tag_cleaner = TagCleaner()
 
 tag_cleaner.loadModel('tagger')
-
-body_raw = codecs.getreader(options.encoding)(file_input).read()
-
-file_input.close()
 
 body_final = tag_cleaner.cleanBody(body_raw)
 
