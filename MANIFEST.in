@@ -1,1 +1,1 @@
-include README.txt requirements.txt nlp/data/tagger.dat scripts/tagger_stdin.py
+include README.txt requirements.txt nlp/data/tagger.dat scripts/nlp_tagger.py
