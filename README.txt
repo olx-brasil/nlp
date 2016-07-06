@@ -7,9 +7,7 @@ A python library for natural language processing
 
 ### Instalation
 
-```sh
 pip install git+ssh://git@devscm.schibsted.com.br/machine-learning/nlp.git
-```
 
 ### Members:
 - Carlos Salvador (carlos.salvador@olxbr.com)
