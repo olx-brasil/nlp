@@ -26,7 +26,7 @@ class TestTagCleaner(TestCase):
     def testCleanNoWords(self):
         result = self.tc.cleanNoWords('abc 123 abc123 123abc 123abc456 def')
         result = re.sub(r'\s+', ' ', result)
-        self.assertEqual(result, 'abc def')
+        self.assertEqual(result, 'abc abc123 123abc 123abc456 def')
 
     def testTokenize(self):
         sentence = 'Eu vou fazer um ovo mexido. Quer 1 ou 2 ovos ?'
@@ -39,19 +39,31 @@ class TestTagCleaner(TestCase):
         self.tc.loadModel(self.model)
         tokens = self.tc.tag(words)
         entities = map(lambda token: token[-1], tokens)
-        self.assertEqual(entities, [u'ART', u'N', u'V', u'ADJ'])
+        self.assertEqual(entities, [u'DET', u'NOUN', u'VERB', u'ADJ'])
+
+    def testEvaluateClass(self):
+        self.tc.addClass('fipe', ['ford', 'palio', 'kombi'])
+        self.assertEqual(self.tc.evaluateClass('ford'), 'fipe')
+        self.assertEqual(self.tc.evaluateClass('palio'), 'fipe')
+        self.assertEqual(self.tc.evaluateClass('bicicleta'), None)
+        self.assertEqual(self.tc.evaluateClass('kombi'), 'fipe')
+
+    def testMapClass(self):
+        self.tc.addClass('fipe', ['ford', 'palio', 'kombi'])
+        mappedClasses = self.tc.mapClass([('ford', 'None'), ('kombi', 'None'), ('bicicleta', 'None'), ('palio', 'None')])
+        self.assertEqual(mappedClasses, [('ford', 'fipe'), ('kombi', 'fipe'), ('bicicleta', 'None'), ('palio', 'fipe')])
 
     def testMarkWindowed(self):
-        sentence = u'o abacaxi está maduro e ainda tem laranja, mandioca, banana, carro, caminhão, loja e aipim'
-        words = re.split(r'\s+', sentence, re.U)
+        sentence = u'Amanha vai chover e eu vou trazer o guarda-chuva, mas vou acabar esquecendo no trabalho ' + ' '.join(['palavradesconhecida']*7)
+        words = re.split(r'\W+', sentence, flags=re.U)
         self.tc.loadModel(self.model)
         tags_marked = self.tc.markWindowed(self.tc.tag(words))
         flags = map(lambda x: x[-1], tags_marked)
-        self.assertEqual(flags, ['0', '0', '0', '0', '0', '0', '0', '1', '1', '1', '1', '1', '1', '0', '0'])
+        self.assertEqual(flags, ['0']*16 + ['1']*7)
 
     def testFilterBodyDel(self):
-        marks = [('', '', '0'), ('', '', '1'), ('', '', '2'), ('', '', '3')]
-        self.assertEqual([('', '', '0')], self.tc.filterBodyDel(marks))
+        marks = [('abc', '', '0'), ('', '', '1'), ('', '', '2'), ('', '', '3')]
+        self.assertEqual([('abc')], self.tc.filterBodyDel(marks))
 
     def testFilterBodyMorf(self):
         marks = [('a', 'ADJ', ''), ('b', 'N', ''), ('x', 'XXX', ''), ('c', 'PCP', ''), ('d', 'V', '')]
