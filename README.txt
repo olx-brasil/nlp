@@ -7,7 +7,7 @@ A python library for natural language processing
 
 ### Instalation
 
-pip install git+ssh://git@github.com:olxbr/nlp.git
+pip install git+ssh://git@github.com/olxbr/nlp.git
 
 ### Members:
 - Carlos Salvador (carlos.salvador@olxbr.com)
